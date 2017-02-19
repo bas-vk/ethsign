@@ -6,23 +6,24 @@ import (
 	"log"
 	"os"
 
-	"github.com/ethereum/go-ethereum/accounts"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/console"
 	"github.com/ethereum/go-ethereum/rpc"
 )
 
 var (
-	keystore = flag.String("keystore", "", "keystore path")
+	keystoreLocation = flag.String("keystore", "", "keystore path")
 )
 
 func main() {
 	flag.Parse()
-	am := accounts.NewManager(*keystore, accounts.StandardScryptN, accounts.StandardScryptP)
+
+	ks := keystore.NewKeyStore(*keystoreLocation, keystore.StandardScryptN, keystore.StandardScryptP)
 
 	handler := rpc.NewServer()
-	pers := &PersService{am}
+	pers := &PersService{ks}
 	handler.RegisterName("personal", pers)
-	eth := &EthService{am}
+	eth := &EthService{ks}
 	handler.RegisterName("eth", eth)
 	consoleBackend := rpc.DialInProc(handler)
 

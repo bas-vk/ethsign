@@ -1,6 +1,6 @@
 ## Ethereum signer
 Ethsigner is a utility that uses local keystore and can sign transactions using an interactive console.
-It uses the same keystore format as geth and is fully compatible.
+It is fully compatible with geth keystore.
 
 ### Usage
 Ethsigner provides the following features:
@@ -24,26 +24,32 @@ ethsign --keystore </path/to/keystore>
 > personal.newAccount()
 Passphrase: 
 Repeat passphrase: 
-"0x58c5a268e50edbe3040969b6e742fd5af4c9e412"
+"0x33178afe528a64aca3a94b80be341216d61112a1"
 ```
 
 #### List accounts
 ```
 > eth.accounts
-["0x58c5a268e50edbe3040969b6e742fd5af4c9e412"]
+["0x33178afe528a64aca3a94b80be341216d61112a1"]
 ```
 
 #### Unlock account for 1 minute
 ```
-> personal.unlockAccount("0x58c5a268e50edbe3040969b6e742fd5af4c9e412", null, 60)
-Unlock account 0x58c5a268e50edbe3040969b6e742fd5af4c9e412
+> personal.unlockAccount("0x33178afe528a64aca3a94b80be341216d61112a1", null, 60)
+Unlock account 0x33178afe528a64aca3a94b80be341216d61112a1
 Passphrase: 
 true
 ```
 
-#### Sign value transaction
+The second (password) and third (duration is seconds) are optional. If the password isn't supplied ethsign will ask for it. If the duration isn't given the account is unlocked until ethsign is closed.
+
+#### Sign (value) transaction
 ```
-> eth.signTransaction({from: "0x58c5a268e50edbe3040969b6e742fd5af4c9e412", to: "0x0f13c906944b155ef6ed569b1ce72a385b090fdc", value: 1, nonce: 12, gas: 21000, gasPrice: web3.toWei(20, "shannon")})
-"0xf8640c8504a817c800825208940f13c906944b155ef6ed569b1ce72a385b090fdc01801ca0dcbb20010859fc8a9e52eb835ba2942ad89959f80f5ce6348c95c75d2e93e2b3a00539eedc0c706d301b7bca5b72f493185bf64ac15b4314198e37a8639e5cc6e0"
+> eth.signTransaction({from: "0x33178afe528a64aca3a94b80be341216d61112a1", to: "0x11fe4f04a5bfda50e155b4289ed69d6fc348333b", value: 1, nonce: 0, gas: 21000, gasPrice: web3.toWei(20, "shannon"), chainId: 3})
+  "0xf864808504a817c8008252089411fe4f04a5bfda50e155b4289ed69d6fc348333b018029a0185316f17dd159019f2b54cb19b2f61b364fe0a312de1b6d3f609c3c536ee41da00efb637f55d0c86be966c66c4691f9c2f012feec2b5a8ca9fe5548a52d4037e0"
 ```
+
 This transaction can be send through `eth.sendRawTransaction` on a live node or some public service like `https://etherscan.io/pushTx`.
+
+Note: the chainId field is optional and default by default to the main net (see for more information https://blog.ethereum.org/2016/11/20/from-morden-to-ropsten/).
+
