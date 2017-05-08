@@ -13,12 +13,18 @@ import (
 
 var (
 	keystoreLocation = flag.String("keystore", "", "keystore path")
+	lightKDF         = flag.Bool("lightkdf", false, "reduce key-derivation RAM & CPU usage at some expense of KDF strength")
 )
 
 func main() {
 	flag.Parse()
 
-	ks := keystore.NewKeyStore(*keystoreLocation, keystore.StandardScryptN, keystore.StandardScryptP)
+	n, p := keystore.StandardScryptN, keystore.StandardScryptP
+	if *lightKDF {
+		n, p = keystore.LightScryptN, keystore.LightScryptP
+	}
+
+	ks := keystore.NewKeyStore(*keystoreLocation, n, p)
 
 	handler := rpc.NewServer()
 	pers := &PersService{ks}
