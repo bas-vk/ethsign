@@ -19,6 +19,10 @@ Ethsigner provides the following features:
 ethsign --keystore </path/to/keystore>
 ```
 
+ethsign optionally accepts the `--lightkdf` flag.
+With this flag set it costs less resources to protect your keys at the expense of security.
+This is useful when ethsign is run on an environment with low resources.
+
 #### Create account
 ```
 > personal.newAccount()
